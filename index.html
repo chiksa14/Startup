@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuranConnect - Ваш духовный спутник</title>
+    <meta name="description" content="Платформа для мусульман: Коран, трекер поклонения, исламский календарь">
+    <meta name="keywords" content="Коран, намаз, мусульмане, ислам, трекер, расписание намазов">
+    <meta name="author" content="QuranConnect">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Иконичный шрифт -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Шрифт для арабского -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New&display=swap" rel="stylesheet">
+    
+    <!-- Основной шрифт -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Уведомление о PWA -->
+    <div id="installPrompt" class="install-prompt hidden">
+        <div class="install-content">
+            <p>Установите QuranConnect для лучшего опыта</p>
+            <button id="installButton" class="btn-install">Установить</button>
+            <button id="dismissInstall" class="btn-dismiss">Позже</button>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div id="notification" class="notification hidden">
+        <div class="notification-content">
+            <span id="notificationMessage"></span>
+            <button class="notification-close" onclick="hideNotification()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-mosque"></i>
+                <span>QuranConnect</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Главная</a>
+                <a href="#quran" class="nav-link">Коран</a>
+                <a href="#prayer" class="nav-link">Намаз</a>
+                <a href="#tracker" class="nav-link">Трекер</a>
+                <a href="#calendar" class="nav-link">Календарь</a>
+                <a href="#about" class="nav-link">О проекте</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn-theme" onclick="toggleTheme()" title="Сменить тему">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn-auth" onclick="showAuthModal()">
+                    <i class="fas fa-user"></i>
+                    <span>Войти</span>
+                </button>
+                <button class="nav-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <span>Меню</span>
+            <button class="mobile-close" onclick="toggleMobileMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-nav">
+            <a href="#home" class="mobile-nav-link active" onclick="toggleMobileMenu()">Главная</a>
+            <a href="#quran" class="mobile-nav-link" onclick="toggleMobileMenu()">Коран</a>
+            <a href="#prayer" class="mobile-nav-link" onclick="toggleMobileMenu()">Намаз</a>
+            <a href="#tracker" class="mobile-nav-link" onclick="toggleMobileMenu()">Трекер</a>
+            <a href="#calendar" class="mobile-nav-link" onclick="toggleMobileMenu()">Календарь</a>
+            <a href="#about" class="mobile-nav-link" onclick="toggleMobileMenu()">О проекте</a>
+        </div>
+        <div class="mobile-actions">
+            <button class="btn-mobile-auth" onclick="showAuthModal(); toggleMobileMenu();">
+                <i class="fas fa-user"></i>
+                Войти в аккаунт
+            </button>
+        </div>
+    </div>
+
+    <!-- Главный экран -->
+    <section id="home" class="hero-section">
+        <div class="hero-background"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="arabic-hero">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+                        <br>
+                        Добро пожаловать в QuranConnect
+                    </h1>
+                    <p class="hero-subtitle">
+                        Ваш цифровой спутник в духовном пути. Чтение Корана, трекер намазов, 
+                        исламский календарь и многое другое в одном приложении.
+                    </p>
+                    
+                    <div class="hero-features">
+                        <div class="feature">
+                            <i class="fas fa-book-quran"></i>
+                            <span>Чтение Корана с переводом</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <span>Расписание намазов</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Трекер привычек</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-calendar"></i>
+                            <span>Исламский календарь</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-actions">
+                        <button class="btn-primary btn-large" onclick="scrollToSection('quran')">
+                            <i class="fas fa-play"></i>
+                            Начать использовать
+                        </button>
+                        <button class="btn-secondary btn-large" onclick="showDonateModal()">
+                            <i class="fas fa-heart"></i>
+                            Поддержать проект
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="usersCount">0</span>
+                            <span class="stat-label">пользователей</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="ayahsRead">0</span>
+                            <span class="stat-label">аятов прочитано</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-pray"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="prayersTracked">0</span>
+                            <span class="stat-label">намазов отслежено</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел: Коран -->
+    <section id="quran" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-book-quran"></i>
+                    Чтение Корана
+                </h2>
+                <p class="section-subtitle">Читайте Коран с переводом, транслитерацией и аудио</p>
+            </div>
+
+            <div class="quran-interface">
+                <div class="quran-sidebar">
+                    <div class="search-box">
+                        <input type="text" id="suraSearch" placeholder="Поиск суры..." 
+                               oninput="searchSuras()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    
+                    <div class="sura-list" id="suraList">
+                        <!-- Список сур будет заполнен через JavaScript -->
+                    </div>
+                </div>
+
+                <div class="quran-reader">
+                    <div class="reader-header">
+                        <div class="sura-info">
+                            <h3 id="currentSuraName">Выберите суру</h3>
+                            <span class="ayah-counter" id="ayahCounter">-</span>
+                        </div>
+                        <div class="reader-controls">
+                            <button class="btn-control" onclick="previousAyah()" disabled id="prevBtn">
+                                <i class="fas fa-chevron-left"></i>
+                                Предыдущий
+                            </button>
+                            <button class="btn-control" onclick="nextAyah()" disabled id="nextBtn">
+                                Следующий
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="ayah-display">
+                        <div class="ayah-content">
+                            <div class="arabic-text" id="arabicText">
+                                اختر سورة للبدء
+                            </div>
+                            <div class="translation" id="translationText">
+                                Выберите суру для начала чтения
+                            </div>
+                            <div class="transliteration" id="transliterationText">
+                                Select a surah to begin reading
+                            </div>
+                        </div>
+                        
+                        <div class="ayah-meta">
+                            <span class="ayah-reference" id="ayahReference">-:-</span>
+                            <div class="ayah-actions">
+                                <button class="btn-action" onclick="playAyahAudio()" id="playBtn">
+                                    <i class="fas fa-play"></i>
+                                    Слушать
+                                </button>
+                                <button class="btn-action" onclick="toggleBookmark()" id="bookmarkBtn">
+                                    <i class="far fa-bookmark"></i>
+                                    Закладка
+                                </button>
+                                <button class="btn-action" onclick="shareAyah()">
+                                    <i class="fas fa-share"></i>
+                                    Поделиться
+                                </button>
+                                <button class="btn-action" onclick="copyAyahText()">
+                                    <i class="fas fa-copy"></i>
+                                    Копировать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Аудио плеер -->
+                    <div class="audio-player hidden" id="audioPlayer">
+                        <audio id="ayahAudio" controls></audio>
+                        <div class="audio-info">
+                            <span id="audioSuraName">-</span>
+                            <span id="audioAyahNumber">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Закладки -->
+            <div class="bookmarks-section">
+                <h3>Мои закладки</h3>
+                <div class="bookmarks-list" id="bookmarksList">
+                    <!-- Закладки будут загружены через JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел: Намаз -->
+    <section id="prayer" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    Время намазов
+                </h2>
+                <p class="section-subtitle">Расписание намазов для вашего местоположения</p>
+            </div>
+
+            <div class="prayer-container">
+                <div class="location-selector">
+                    <div class="location-input">
+                        <input type="text" id="cityInput" placeholder="Введите ваш город" 
+                               value="Москва">
+                        <button class="btn-location" onclick="getLocation()" title="Определить местоположение">
+                            <i class="fas fa-location-crosshairs"></i>
+                        </button>
+                        <button class="btn-search" onclick="searchPrayerTimes()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="location-info" id="locationInfo">
+                        Текущее местоположение: Москва, Россия
+                    </div>
+                </div>
+
+                <div class="prayer-grid">
+                    <!-- Карточка следующего намаза -->
+                    <div class="prayer-highlight">
+                        <div class="next-prayer">
+                            <div class="next-prayer-label">Следующий намаз:</div>
+                            <div class="next-prayer-name" id="nextPrayerName">-</div>
+                            <div class="next-prayer-time" id="nextPrayerTime">-</div>
+                            <div class="countdown" id="prayerCountdown">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Сетка времени намазов -->
+                    <div class="prayer-times-grid">
+                        <div class="prayer-time-card" data-prayer="fajr">
+                            <div class="prayer-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="prayer-info">
+                                <div class="prayer-name">Фаджр</div>
+                                <div class="prayer-time" id="fajrTime">-</div>
+                            </div>
+                            <label class="prayer-checkbox">
+                                <input type="checkbox" id="fajrCheckbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <!-- Аналогично для других намазов -->
+                        <div class="prayer-time-card" data-prayer="dhuhr">
+                            <div class="prayer-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="prayer-info">
+                                <div class="prayer-name">Зухр</div>
+                                <div class="prayer-time" id="dhuhrTime">-</div>
+                            </div>
+                            <label class="prayer-checkbox">
+                                <input type="checkbox" id="dhuhrCheckbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="prayer-time-card" data-prayer="asr">
+                            <div class="prayer-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="prayer-info">
+                                <div class="prayer-name">Аср</div>
+                                <div class="prayer-time" id="asrTime">-</div>
+                            </div>
+                            <label class="prayer-checkbox">
+                                <input type="checkbox" id="asrCheckbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="prayer-time-card" data-prayer="maghrib">
+                            <div class="prayer-icon">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div class="prayer-info">
+                                <div class="prayer-name">Магриб</div>
+                                <div class="prayer-time" id="maghribTime">-</div>
+                            </div>
+                            <label class="prayer-checkbox">
+                                <input type="checkbox" id="maghribCheckbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="prayer-time-card" data-prayer="isha">
+                            <div class="prayer-icon">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div class="prayer-info">
+                                <div class="prayer-name">Иша</div>
+                                <div class="prayer-time" id="ishaTime">-</div>
+                            </div>
+                            <label class="prayer-checkbox">
+                                <input type="checkbox" id="ishaCheckbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Компас Киблы -->
+                <div class="qibla-section">
+                    <h3>Направление Киблы</h3>
+                    <div class="qibla-compass">
+                        <div class="compass">
+                            <div class="compass-arrow" id="qiblaArrow">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="compass-circle"></div>
+                            <div class="compass-directions">
+                                <span class="dir-n">N</span>
+                                <span class="dir-e">E</span>
+                                <span class="dir-s">S</span>
+                                <span class="dir-w">W</span>
+                            </div>
+                        </div>
+                        <div class="qibla-info">
+                            <div class="qibla-direction" id="qiblaDirection">-</div>
+                            <div class="qibla-degree" id="qiblaDegree">-</div>
+                            <button class="btn-qibla" onclick="updateQiblaDirection()">
+                                <i class="fas fa-sync-alt"></i>
+                                Обновить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел: Трекер -->
+    <section id="tracker" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Трекер привычек
+                </h2>
+                <p class="section-subtitle">Отслеживайте ваше поклонение и духовный прогресс</p>
+            </div>
+
+            <div class="tracker-container">
+                <!-- Быстрая статистика -->
+                <div class="quick-stats-grid">
+                    <div class="stat-card-large">
+                        <div class="stat-icon-large">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="currentStreak">0</div>
+                            <div class="stat-label">Дней подряд</div>
+                            <div class="stat-trend">+2 на этой неделе</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-large">
+                        <div class="stat-icon-large">
+                            <i class="fas fa-pray"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="weeklyPrayers">0</div>
+                            <div class="stat-label">Намазов на неделе</div>
+                            <div class="stat-trend">85% выполнено</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-large">
+                        <div class="stat-icon-large">
+                            <i class="fas fa-book-quran"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="quranProgress">0</div>
+                            <div class="stat-label">Страниц Корана</div>
+                            <div class="stat-trend">Цель: 10 в день</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Трекер привычек -->
+                <div class="habits-grid">
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <h3>Ежедневные намазы</h3>
+                            <span class="habit-score" id="prayerScore">0/5</span>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="prayerProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-checkboxes">
+                            <!-- Чекбоксы для намазов -->
+                        </div>
+                    </div>
+                    
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <h3>Чтение Корана</h3>
+                            <span class="habit-score" id="quranScore">0/10</span>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="quranProgressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-controls">
+                            <button class="btn-habit" onclick="incrementQuranPages(1)">
+                                +1 страница
+                            </button>
+                            <button class="btn-habit" onclick="incrementQuranPages(5)">
+                                +5 страниц
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="habit-card">
+                        <div class="habit-header">
+                            <h3>Зикр и дуа</h3>
+                            <span class="habit-score" id="dhikrScore">0/100</span>
+                        </div>
+                        <div class="habit-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="dhikrProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="dhikr-counter">
+                            <button class="btn-dhikr" onclick="incrementDhikr(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <span class="dhikr-count" id="dhikrCount">0</span>
+                            <button class="btn-dhikr" onclick="incrementDhikr(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Календарь прогресса -->
+                <div class="progress-calendar">
+                    <h3>Календарь прогресса</h3>
+                    <div class="calendar" id="progressCalendar">
+                        <!-- Календарь будет заполнен через JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел: Календарь -->
+    <section id="calendar" class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar"></i>
+                    Исламский календарь
+                </h2>
+                <p class="section-subtitle">Даты по Хиджре и важные исламские события</p>
+            </div>
+
+            <div class="calendar-container">
+                <div class="hijri-date-card">
+                    <div class="hijri-display">
+                        <div class="hijri-day" id="hijriDay">-</div>
+                        <div class="hijri-month" id="hijriMonth">-</div>
+                        <div class="hijri-year" id="hijriYear">-</div>
+                    </div>
+                    <div class="gregorian-date" id="gregorianDate">-</div>
+                    <div class="hijri-events" id="hijriEvents">
+                        <!-- События будут загружены через JavaScript -->
+                    </div>
+                </div>
+
+                <div class="islamic-events">
+                    <h3>Ближайшие события</h3>
+                    <div class="events-list" id="eventsList">
+                        <!-- События будут загружены через JavaScript -->
+                    </div>
+                </div>
+
+                <div class="prayer-times-month">
+                    <h3>Расписание намазов на месяц</h3>
+                    <div class="monthly-prayer-table" id="monthlyPrayerTable">
+                        <!-- Таблица будет заполнена через JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел: О проекте -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">О проекте QuranConnect</h2>
+                <p class="section-subtitle">Современная платформа для духовного развития мусульман</p>
+            </div>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Наша миссия</h3>
+                    <p>
+                        QuranConnect создан с целью помочь мусульманам в их духовном пути, 
+                        предоставляя удобные инструменты для чтения Корана, отслеживания поклонения 
+                        и соблюдения религиозных практик в современном цифровом мире.
+                    </p>
+                    
+                    <h3>Возможности</h3>
+                    <ul class="features-list">
+                        <li>Чтение Корана с переводом и транслитерацией</li>
+                        <li>Расписание намазов для любого города</li>
+                        <li>Трекер духовных привычек</li>
+                        <li>Исламский календарь и важные даты</li>
+                        <li>Направление Киблы</li>
+                        <li>Прогресс и статистика</li>
+                    </ul>
+                    
+                    <h3>Технологии</h3>
+                    <p>
+                        QuranConnect построен на современных веб-технологиях и работает 
+                        в любом браузере. Вы также можете установить приложение на свой 
+                        телефон или компьютер для оффлайн-доступа.
+                    </p>
+                </div>
+                
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-desc">Бесплатно и с открытым исходным кодом</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-desc">Доступно в любое время</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0%</div>
+                        <div class="stat-desc">Рекламы и отслеживания</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h3>Команда разработки</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="member-info">
+                            <h4>QuranConnect Team</h4>
+                            <p>Разработчики и волонтеры</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-mosque"></i>
+                        <span>QuranConnect</span>
+                    </div>
+                    <p class="footer-description">
+                        Ваш цифровой спутник в духовном пути. 
+                        Бесплатно и с открытым исходным кодом.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Telegram">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" class="social-link" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Разделы</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#quran">Коран</a></li>
+                        <li><a href="#prayer">Намаз</a></li>
+                        <li><a href="#tracker">Трекер</a></li>
+                        <li><a href="#calendar">Календарь</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showDonateModal()">Поддержать проект</a></li>
+                        <li><a href="#" onclick="showFeedbackModal()">Обратная связь</a></li>
+                        <li><a href="#" onclick="showPrivacyModal()">Политика конфиденциальности</a></li>
+                        <li><a href="#" onclick="showTermsModal()">Условия использования</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@quranconnect.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <span>quranconnect.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 QuranConnect. Все права защищены.</p>
+                <p>Сделано с ❤️ для мусульманской уммы</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальные окна -->
+    <!-- Модалка авторизации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Вход в аккаунт</h3>
+                <button class="modal-close" onclick="closeModal('authModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Войдите, чтобы синхронизировать ваши данные между устройствами</p>
+                <div class="auth-options">
+                    <button class="btn-auth-option" onclick="signInWithGoogle()">
+                        <i class="fab fa-google"></i>
+                        Войти через Google
+                    </button>
+                    <button class="btn-auth-option" onclick="signInWithEmail()">
+                        <i class="fas fa-envelope"></i>
+                        Войти через Email
+                    </button>
+                </div>
+                <div class="auth-divider">
+                    <span>или</span>
+                </div>
+                <button class="btn-auth-local" onclick="useLocalAccount()">
+                    <i class="fas fa-user"></i>
+                    Продолжить локально
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка доната -->
+    <div id="donateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Поддержать проект</h3>
+                <button class="modal-close" onclick="closeModal('donateModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="donate-hero">
+                    <i class="fas fa-heart"></i>
+                    <p>Ваша садака поможет развитию проекта и принесет вам саваб иншаАллах</p>
+                </div>
+                
+                <div class="donate-options">
+                    <div class="donate-option" onclick="selectDonateAmount(100)">
+                        <div class="amount">100 ₽</div>
+                        <div class="description">Маленькая садака</div>
+                    </div>
+                    <div class="donate-option" onclick="selectDonateAmount(500)">
+                        <div class="amount">500 ₽</div>
+                        <div class="description">Средняя садака</div>
+                    </div>
+                    <div class="donate-option" onclick="selectDonateAmount(1000)">
+                        <div class="amount">1000 ₽</div>
+                        <div class="description">Большая садака</div>
+                    </div>
+                    <div class="donate-option" onclick="selectDonateAmount(0)">
+                        <div class="amount">Другая</div>
+                        <div class="description">Любая сумма</div>
+                    </div>
+                </div>
+                
+                <div class="custom-amount hidden" id="customAmount">
+                    <label for="donateInput">Введите сумму:</label>
+                    <input type="number" id="donateInput" placeholder="500" min="10" step="10">
+                    <span class="currency">₽</span>
+                </div>
+                
+                <div class="donate-methods">
+                    <h4>Способы оплаты:</h4>
+                    <div class="payment-methods">
+                        <button class="payment-method" onclick="processDonation('card')">
+                            <i class="fas fa-credit-card"></i>
+                            Банковская карта
+                        </button>
+                        <button class="payment-method" onclick="processDonation('yoomoney')">
+                            <i class="fas fa-wallet"></i>
+                            ЮMoney
+                        </button>
+                        <button class="payment-method" onclick="processDonation('crypto')">
+                            <i class="fab fa-bitcoin"></i>
+                            Криптовалюта
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Загрузчик -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <h3>QuranConnect</h3>
+            <p>Загрузка...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
